@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lama Almarwani — UX/UI Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&family=Noto+Kufi+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#141B33;
+    --night-2:#1D2748;
+    --bone:#F1E8D9;
+    --bone-2:#E4D8C3;
+    --brass:#C99039;
+    --pom:#B8443C;
+    --mint:#48A99A;
+    --ink:#141B33;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--night);
+    color:var(--bone);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    line-height:1.5;
+    padding:clamp(12px,2.5vw,32px);
+    background-image:radial-gradient(circle at 18% 12%,rgba(201,144,57,.14),transparent 42%),
+                     radial-gradient(circle at 82% 78%,rgba(72,169,154,.12),transparent 46%);
+  }
+  .wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(14px,2.4vw,26px)}
+
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .disp{font-family:"Fraunces",serif;font-weight:900;line-height:.92;letter-spacing:-.015em}
+  .ar{font-family:"Noto Kufi Arabic",sans-serif;direction:rtl}
+
+  .card{
+    background:var(--bone);color:var(--ink);border-radius:18px;
+    padding:clamp(22px,3.4vw,42px);position:relative;
+    opacity:0;transform:translateY(24px);
+    transition:opacity .7s ease,transform .7s cubic-bezier(.22,.8,.3,1);
+  }
+  .card.in{opacity:1;transform:none}
+
+  /* ---------- BOARDING PASS HERO ---------- */
+  .pass{display:grid;grid-template-columns:1fr 260px;gap:0;padding:0;overflow:hidden}
+  .pass-main{padding:clamp(24px,3.6vw,44px)}
+  .stub{
+    background:var(--night-2);color:var(--bone);
+    padding:clamp(24px,3vw,34px);
+    display:flex;flex-direction:column;justify-content:space-between;gap:18px;
+    position:relative;
+  }
+  .stub::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+    background-image:linear-gradient(var(--bone) 55%,transparent 0);
+    background-size:2px 14px;
+  }
+  .pass-main .kicker{color:var(--pom);margin-bottom:14px}
+  .pass-main h1{font-size:clamp(2.6rem,7.4vw,5.2rem);margin-bottom:6px}
+  .pass-main h1 .g{color:var(--brass)}
+  .pass-main .arname{font-size:clamp(1rem,2.4vw,1.5rem);color:rgba(20,27,51,.62);margin-bottom:18px}
+  .pass-main .lede{max-width:44ch;font-size:1rem;color:rgba(20,27,51,.85)}
+
+  .route{display:flex;align-items:center;gap:12px;margin:26px 0 4px}
+  .route .pt{font-family:"Fraunces",serif;font-weight:900;font-size:1.5rem}
+  .route .line{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--ink) 0 6px,transparent 6px 12px);position:relative}
+  .route .line::after{content:"✈";position:absolute;top:50%;left:0;transform:translate(-50%,-52%);font-size:1rem;color:var(--pom);animation:fly 6s ease-in-out infinite}
+  @keyframes fly{0%{left:0}50%{left:100%}100%{left:0}}
+  .route-lbl{display:flex;justify-content:space-between;color:rgba(20,27,51,.6)}
+
+  .stub .row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed rgba(241,232,217,.28);padding-bottom:8px}
+  .stub .row span:last-child{color:var(--brass);font-family:"IBM Plex Mono",monospace;font-size:.72rem}
+  .barcode{display:flex;gap:2px;height:44px;align-items:flex-end}
+  .barcode i{display:block;width:3px;background:var(--bone);opacity:.85}
+
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .btn{
+    font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:12px 20px;border-radius:999px;border:1.5px solid var(--ink);color:var(--ink);
+    background:transparent;text-decoration:none;cursor:pointer;
+    transition:background .2s,color .2s,transform .2s;
+  }
+  .btn:hover,.btn:focus-visible{background:var(--ink);color:var(--bone);transform:translateY(-2px)}
+  .btn.fill{background:var(--pom);border-color:var(--pom);color:var(--bone)}
+  .btn.fill:hover{background:var(--ink);border-color:var(--ink)}
+
+  /* ---------- SECTION HEAD ---------- */
+  .head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:26px}
+  .head h2{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(1.6rem,3.6vw,2.5rem)}
+  .head .note{color:rgba(20,27,51,.55)}
+
+  /* ---------- PHONE SHOWCASE ---------- */
+  .show{display:grid;grid-template-columns:300px 1fr;gap:clamp(24px,4vw,48px);align-items:center}
+  .phone{
+    width:270px;height:552px;margin:0 auto;border-radius:38px;background:var(--night);
+    padding:11px;box-shadow:0 22px 44px rgba(20,27,51,.28);position:relative;
+  }
+  .phone::before{content:"";position:absolute;top:20px;left:50%;transform:translateX(-50%);width:82px;height:22px;border-radius:999px;background:var(--night);z-index:3}
+  .screen{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative;background:var(--bone-2)}
+  .scr{position:absolute;inset:0;padding:44px 18px 18px;display:flex;flex-direction:column;gap:12px;opacity:0;transform:scale(.98);transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+  .scr.on{opacity:1;transform:none;pointer-events:auto}
+  .scr img{width:100%;height:100%;object-fit:cover;border-radius:28px;position:absolute;inset:0;padding:0}
+
+  /* fake UI bits so the frames are alive before real screens are dropped in */
+  .ui-top{display:flex;justify-content:space-between;align-items:center}
+  .ui-title{font-family:"Fraunces",serif;font-weight:900;font-size:1.35rem;color:var(--ink)}
+  .ui-dot{width:30px;height:30px;border-radius:50%;background:var(--brass)}
+  .ui-hero{height:150px;border-radius:16px;background:linear-gradient(140deg,var(--night-2),var(--mint));display:flex;align-items:flex-end;padding:12px;color:var(--bone);font-size:.75rem;font-weight:600}
+  .ui-row{display:flex;gap:8px}
+  .ui-pill{flex:1;padding:8px;border-radius:999px;background:#fff;font-size:.6rem;text-align:center;color:var(--ink);font-family:"IBM Plex Mono",monospace}
+  .ui-pill.act{background:var(--pom);color:#fff}
+  .ui-item{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px}
+  .ui-thumb{width:42px;height:42px;border-radius:10px;background:var(--bone-2)}
+  .ui-item b{display:block;font-size:.72rem;color:var(--ink)}
+  .ui-item small{font-size:.6rem;color:rgba(20,27,51,.55)}
+  .ui-bar{margin-top:auto;display:flex;justify-content:space-around;background:#fff;border-radius:16px;padding:10px;font-size:.85rem}
+
+  .artboard{
+    border:0;padding:0;background:var(--bone-2);cursor:pointer;
+    border-radius:14px;overflow:hidden;position:relative;display:block;width:100%;
+    box-shadow:0 16px 34px rgba(20,27,51,.2);
+    transition:transform .25s cubic-bezier(.22,.8,.3,1),box-shadow .25s ease;
+  }
+  .artboard img{width:100%;height:auto;display:block}
+  .artboard:hover,.artboard:focus-visible{transform:translateY(-5px);box-shadow:0 24px 46px rgba(20,27,51,.3);outline:none}
+  .artboard .zoom{
+    position:absolute;inset:auto 0 0 0;background:rgba(20,27,51,.86);color:var(--bone);
+    padding:10px;text-align:center;transform:translateY(100%);transition:transform .25s ease;
+  }
+  .artboard:hover .zoom,.artboard:focus-visible .zoom{transform:none}
+
+  .tagx.mono{color:var(--pom);display:block;margin-bottom:6px}
+  .story-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 16px;border-bottom:1.5px solid rgba(20,27,51,.18)}
+  .st{
+    border:0;background:transparent;cursor:pointer;color:rgba(20,27,51,.55);
+    font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;
+    padding:9px 12px;position:relative;transition:color .2s;
+  }
+  .st:hover{color:var(--ink)}
+  .st::after{content:"";position:absolute;left:12px;right:12px;bottom:-1.5px;height:2.5px;background:var(--pom);transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.22,.8,.3,1)}
+  .st[aria-selected="true"]{color:var(--ink)}
+  .st[aria-selected="true"]::after{transform:scaleX(1)}
+  .story-body{min-height:118px}
+  .story-body p{color:rgba(20,27,51,.85);animation:fadeUp .38s ease}
+  .story-body ul{margin:0 0 0 17px;color:rgba(20,27,51,.85);animation:fadeUp .38s ease}
+  .story-body li{margin-bottom:6px;font-size:.93rem}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+  .thumb{
+    border:0;padding:0;background:var(--bone-2);cursor:pointer;
+    width:64px;height:78px;border-radius:8px;overflow:hidden;position:relative;
+    box-shadow:0 4px 12px rgba(20,27,51,.16);opacity:.55;
+    transition:opacity .2s,transform .2s,box-shadow .2s;
+  }
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb:hover{opacity:.85;transform:translateY(-3px)}
+  .thumb[aria-selected="true"]{opacity:1;box-shadow:0 0 0 2.5px var(--pom),0 8px 18px rgba(20,27,51,.24)}
+  .thumb-add{
+    width:64px;height:78px;border-radius:8px;border:1.5px dashed rgba(20,27,51,.3);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"IBM Plex Mono",monospace;font-size:.5rem;letter-spacing:.08em;
+    text-transform:uppercase;color:rgba(20,27,51,.45);text-align:center;padding:6px;line-height:1.3;
+  }
+
+  .show-copy h3{font-family:"Fraunces",serif;font-weight:900;font-size:1.7rem;margin-bottom:8px}
+  .show-copy p{color:rgba(20,27,51,.82);max-width:46ch}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .tab{
+    font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:10px 14px;border-radius:999px;border:1.5px solid rgba(20,27,51,.3);background:transparent;color:var(--ink);cursor:pointer;
+    transition:all .2s;
+  }
+  .tab:hover{border-color:var(--ink)}
+  .tab[aria-selected="true"]{background:var(--night);color:var(--bone);border-color:var(--night)}
+  .meta{display:flex;gap:22px;margin-top:22px;flex-wrap:wrap}
+  .meta > div{border-left:2px solid var(--brass);padding-left:10px}
+  .meta .k{font-family:"IBM Plex Mono",monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,27,51,.55)}
+  .meta .v{font-weight:600;font-size:.9rem}
+
+  /* ---------- GALLERY (poster wall) ---------- */
+  .gal-band{
+    display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+    padding:14px 0;margin:22px 0;
+  }
+  .gal-band h3{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(1.2rem,2.8vw,1.9rem);text-transform:uppercase;letter-spacing:.01em}
+  .gal-band .rule{flex:1;height:1px;background:rgba(20,27,51,.25);min-width:40px}
+  .gal-band .yr{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.16em;color:var(--pom)}
+
+  .filters{display:flex;flex-wrap:wrap;gap:8px}
+  .filt{
+    font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:9px 14px;border-radius:999px;border:1.5px solid rgba(20,27,51,.28);
+    background:transparent;color:var(--ink);cursor:pointer;transition:all .2s;
+  }
+  .filt:hover{border-color:var(--ink)}
+  .filt[aria-pressed="true"]{background:var(--pom);border-color:var(--pom);color:var(--bone)}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .tile{
+    border:0;padding:0;background:transparent;cursor:pointer;text-align:left;
+    display:flex;flex-direction:column;gap:8px;font:inherit;color:inherit;
+    transition:transform .25s cubic-bezier(.22,.8,.3,1),opacity .3s ease;
+  }
+  .tile.hide{display:none}
+  .tile:hover,.tile:focus-visible{transform:translateY(-6px);outline:none}
+  .tile:focus-visible .poster{box-shadow:0 0 0 3px var(--brass)}
+  .poster{
+    aspect-ratio:3/4;border-radius:10px;overflow:hidden;position:relative;
+    background:var(--night-2);box-shadow:0 8px 20px rgba(20,27,51,.22);
+    transition:box-shadow .25s ease;
+  }
+  .tile:hover .poster{box-shadow:0 16px 34px rgba(20,27,51,.34)}
+  .poster img{width:100%;height:100%;object-fit:cover;display:block}
+  .poster .fallback{
+    position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;
+    padding:12px;color:var(--bone);
+  }
+  .poster .fallback .big{font-family:"Fraunces",serif;font-weight:900;font-size:1.5rem;line-height:.95;text-transform:uppercase}
+  .poster .fallback .sm{font-family:"IBM Plex Mono",monospace;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+  .poster::after{
+    content:"View";position:absolute;inset:auto 0 0 0;
+    font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+    background:rgba(20,27,51,.86);color:var(--bone);padding:9px;text-align:center;
+    transform:translateY(100%);transition:transform .25s ease;
+  }
+  .tile:hover .poster::after,.tile:focus-visible .poster::after{transform:none}
+  .cap{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .cap b{font-size:.78rem;font-weight:600}
+  .cap span{font-family:"IBM Plex Mono",monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(20,27,51,.55);white-space:nowrap}
+  .gal-foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:rgba(20,27,51,.5)}
+  .gal-foot .num{font-family:"Fraunces",serif;font-weight:900;font-size:1.6rem;color:rgba(20,27,51,.35)}
+
+  /* lightbox */
+  .lb{position:fixed;inset:0;background:rgba(20,27,51,.94);display:none;z-index:50;padding:24px}
+  .lb.open{display:flex;align-items:center;justify-content:center;gap:22px}
+  .lb-inner{display:grid;grid-template-columns:minmax(0,420px) minmax(0,340px);gap:28px;align-items:center;max-height:100%}
+  .lb-img{border-radius:12px;overflow:hidden;background:var(--night-2);aspect-ratio:3/4;max-height:76vh;position:relative}
+  .lb-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .lb-txt{color:var(--bone)}
+  .lb-txt .tagx{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+  .lb-txt h4{font-family:"Fraunces",serif;font-weight:900;font-size:2rem;line-height:1;margin:8px 0 12px}
+  .lb-txt p{font-size:.92rem;opacity:.86;margin-bottom:16px}
+  .lb-txt .facts{display:flex;flex-wrap:wrap;gap:14px 22px;margin-bottom:22px}
+  .lb-txt .facts > div{border-left:2px solid var(--pom);padding-left:9px}
+  .lb-txt .facts .k{font-family:"IBM Plex Mono",monospace;font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+  .lb-txt .facts .v{font-size:.84rem;font-weight:600}
+  .lb-nav{display:flex;gap:10px;align-items:center}
+  .nb{
+    background:transparent;border:1.5px solid rgba(241,232,217,.45);color:var(--bone);
+    border-radius:999px;padding:10px 16px;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;
+    transition:all .2s;
+  }
+  .nb:hover{background:var(--bone);color:var(--night)}
+  .lb-count{font-family:"IBM Plex Mono",monospace;font-size:.66rem;opacity:.6;margin-left:auto}
+  .lb-x{position:absolute;top:18px;right:20px;background:transparent;border:0;color:var(--bone);font-size:1.7rem;cursor:pointer;line-height:1;opacity:.75;z-index:3}
+  .lb-x:hover{opacity:1;color:var(--pom)}
+
+  /* image stage + in-project page arrows (‹ ›) */
+  .lb-stage{position:relative;display:flex;align-items:center;justify-content:center}
+  .pager{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+    width:42px;height:42px;border-radius:50%;cursor:pointer;
+    background:rgba(20,27,51,.72);border:1.5px solid rgba(241,232,217,.5);
+    color:var(--bone);font-size:1.5rem;line-height:1;display:flex;align-items:center;justify-content:center;
+    transition:background .2s,transform .2s;
+  }
+  .pager:hover{background:var(--pom);border-color:var(--pom)}
+  .pager.prev{left:10px} .pager.next{right:10px}
+  .pager[hidden]{display:none}
+  .pg-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+  .pg-dots i{width:7px;height:7px;border-radius:50%;background:rgba(241,232,217,.4);transition:background .2s}
+  .pg-dots i.on{background:var(--pom)}
+
+  /* VIEW PROJECT button */
+  .btn-view{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+    background:var(--brass);border:0;color:var(--night);
+    padding:12px 20px;border-radius:999px;margin-bottom:20px;
+    transition:transform .2s,filter .2s;
+  }
+  .btn-view:hover{transform:translateY(-2px);filter:brightness(1.07)}
+  .btn-view[hidden]{display:none}
+
+  /* PROJECTS navigation group */
+  .lb-projnav{border-top:1px solid rgba(241,232,217,.18);padding-top:16px}
+  .lb-projlbl{display:block;color:var(--brass);margin-bottom:10px;opacity:.9}
+
+  @media (max-width:980px){ .grid{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:720px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .lb-inner{grid-template-columns:1fr;gap:16px;overflow-y:auto}
+    .lb-img{max-height:44vh}
+    .lb-txt h4{font-size:1.4rem}
+  }
+
+  /* ---------- ABOUT / SKILLS ---------- */
+  .two{display:grid;grid-template-columns:1.15fr .85fr;gap:34px}
+  .quote{font-family:"Fraunces",serif;font-weight:600;font-style:italic;font-size:1.25rem;line-height:1.4;border-left:3px solid var(--pom);padding-left:16px;margin-bottom:18px}
+  .about p{color:rgba(20,27,51,.85);margin-bottom:12px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.06em;padding:7px 11px;border-radius:999px;background:var(--bone-2);color:var(--ink)}
+  .chip:hover{background:var(--night);color:var(--bone)}
+  .stats{display:grid;gap:10px}
+  .stat{background:var(--night);color:var(--bone);border-radius:14px;padding:16px}
+  .stat .n{font-family:"Fraunces",serif;font-weight:900;font-size:1.9rem;color:var(--brass)}
+  .stat .k{font-size:.72rem;opacity:.8}
+
+  /* ---------- PATH ---------- */
+  .path{display:grid;gap:0}
+  .stop{display:grid;grid-template-columns:118px 24px 1fr;gap:14px;padding:16px 0;align-items:start}
+  .stop .yr{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.08em;color:rgba(20,27,51,.6);padding-top:4px}
+  .dotline{position:relative;justify-self:center;width:100%;height:100%}
+  .dotline::before{content:"";position:absolute;left:50%;top:0;bottom:-16px;width:2px;transform:translateX(-50%);background:rgba(20,27,51,.18)}
+  .dotline i{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:var(--pom);border:2px solid var(--bone)}
+  .stop:last-child .dotline::before{display:none}
+  .stop h4{font-family:"Fraunces",serif;font-weight:900;font-size:1.1rem}
+  .stop p{font-size:.88rem;color:rgba(20,27,51,.78)}
+
+  /* ---------- CONTACT ---------- */
+  .contact{background:var(--night);color:var(--bone);text-align:center}
+  .contact h2{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(2rem,6vw,4rem);line-height:1;margin-bottom:8px}
+  .contact h2 em{font-style:normal;color:var(--brass)}
+  .contact .ar{font-size:1.1rem;opacity:.7;margin-bottom:22px;direction:rtl}
+  .links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 26px;font-family:"IBM Plex Mono",monospace;font-size:.78rem}
+  .links a{color:var(--bone);text-decoration:none;border-bottom:1px solid var(--pom);padding-bottom:2px}
+  .links a:hover{color:var(--brass);border-color:var(--brass)}
+
+  @media (max-width:880px){
+    .pass{grid-template-columns:1fr}
+    .stub::before{left:0;right:0;top:0;bottom:auto;width:auto;height:2px;background-image:linear-gradient(90deg,var(--bone) 55%,transparent 0);background-size:14px 2px}
+    .show{grid-template-columns:1fr}
+    .two{grid-template-columns:1fr}
+    .stop{grid-template-columns:1fr;gap:2px}
+    .dotline{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .card{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO: BOARDING PASS -->
+  <header class="card pass in">
+    <div class="pass-main">
+      <p class="mono kicker">UX / UI Designer · Mobile Interfaces</p>
+      <h1 class="disp">Lama <span class="g">Almarwani</span></h1>
+      <p class="arname ar">لمى المرواني</p>
+      <p class="lede">I design mobile apps for people who are moving: booking a trip, checking in, finding their gate. I spent two years on the other side of that counter, so I know exactly where the screen lets them down.</p>
+
+      <div class="route">
+        <span class="pt">AMD</span>
+        <span class="line"></span>
+        <span class="pt">YVR</span>
+      </div>
+      <div class="route-lbl mono"><span>Al-Madinah</span><span>Vancouver</span></div>
+
+      <div class="btns">
+        <a class="btn fill" href="#work">See the screens</a>
+        <a class="btn" href="#contact">Work with me</a>
+      </div>
+    </div>
+
+    <aside class="stub">
+      <div>
+        <p class="mono" style="color:var(--brass);margin-bottom:14px">Boarding pass</p>
+        <div class="row"><span class="mono">Designer</span><span>L. ALMARWANI</span></div>
+        <div class="row" style="margin-top:10px"><span class="mono">Focus</span><span>MOBILE UI</span></div>
+        <div class="row" style="margin-top:10px"><span class="mono">Tools</span><span>FIGMA / ADOBE</span></div>
+        <div class="row" style="margin-top:10px"><span class="mono">Languages</span><span>AR / EN</span></div>
+      </div>
+      <div>
+        <div class="barcode" id="barcode"></div>
+        <p class="mono" style="margin-top:8px;opacity:.6">Seat 2A · Window</p>
+      </div>
+    </aside>
+  </header>
+
+  <!-- WORK -->
+  <section class="card" id="work">
+    <div class="head">
+      <h2>Selected Screens</h2>
+      <span class="note mono">UX / UI case studies · click a thumbnail to switch</span>
+    </div>
+
+    <div class="show">
+      <button class="artboard" id="screensShot" aria-label="Open project full size">
+        <img id="sc-img" alt="">
+        <span class="zoom mono">Click to enlarge</span>
+      </button>
+
+      <div class="show-copy">
+        <span class="tagx mono" id="sc-tag"></span>
+        <h3 id="sc-title"></h3>
+
+        <div class="story-tabs" id="storyTabs" role="tablist" aria-label="Case study"></div>
+        <div class="story-body" id="storyBody"></div>
+
+        <div class="meta">
+          <div><div class="k">Role</div><div class="v" id="sc-role"></div></div>
+          <div><div class="k">Type</div><div class="v" id="sc-type"></div></div>
+          <div><div class="k">Made with</div><div class="v" id="sc-tools"></div></div>
+        </div>
+
+        <div class="thumbs" id="thumbs" role="tablist" aria-label="Projects"></div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- GALLERY -->
+  <section class="card" id="gallery">
+    <div class="head">
+      <h2>The Rest Of The Work</h2>
+      <span class="note mono">Click any poster to open it</span>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filt" aria-pressed="true" data-f="all">All</button>
+      <button class="filt" aria-pressed="false" data-f="awareness">Awareness</button>
+      <button class="filt" aria-pressed="false" data-f="safety">Safety campaigns</button>
+      <button class="filt" aria-pressed="false" data-f="illustration">Illustration</button>
+      <button class="filt" aria-pressed="false" data-f="packaging">Packaging</button>
+    </div>
+
+    <div class="gal-band">
+      <h3>Poster &amp; Campaign</h3>
+      <span class="yr">(2023 to 2026)</span>
+      <span class="rule"></span>
+      <h3>Illustration</h3>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="gal-foot">
+      <span class="mono">Lama Almarwani · Al-Madinah</span>
+      <span class="num">01</span>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Project viewer">
+    <button class="lb-x" id="lb-x" aria-label="Close">×</button>
+    <div class="lb-inner">
+
+      <!-- image stage: ‹ / › page through THIS project's images -->
+      <div class="lb-stage">
+        <div class="lb-img" id="lb-img"></div>
+        <button class="pager prev" id="pg-prev" aria-label="Previous image">‹</button>
+        <button class="pager next" id="pg-next" aria-label="Next image">›</button>
+        <span class="pg-dots" id="pg-dots"></span>
+      </div>
+
+      <div class="lb-txt">
+        <span class="tagx" id="lb-tag"></span>
+        <h4 id="lb-title"></h4>
+        <p id="lb-desc"></p>
+        <div class="facts">
+          <div><div class="k">Year</div><div class="v" id="lb-year"></div></div>
+          <div><div class="k">Tools</div><div class="v" id="lb-tools"></div></div>
+          <div><div class="k">Type</div><div class="v" id="lb-type"></div></div>
+        </div>
+
+        <!-- VIEW PROJECT: opens all pages of the current project -->
+        <button class="btn-view" id="lb-view">View project ⤢</button>
+
+        <!-- PROJECTS: prev / next move between different projects -->
+        <div class="lb-projnav">
+          <span class="lb-projlbl mono">Projects</span>
+          <div class="lb-nav">
+            <button class="nb" id="lb-prev">← Prev</button>
+            <button class="nb" id="lb-next">Next →</button>
+            <span class="lb-count" id="lb-count"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="card">
+    <div class="head">
+      <h2>Who Is Behind The Screens</h2>
+      <span class="note mono">Al-Madinah → Vancouver</span>
+    </div>
+    <div class="two">
+      <div class="about">
+        <p class="quote">Good design does what a good host does. It notices what you need before you have to ask for it.</p>
+        <p>I trained as a graphic designer, then spent two years in travel and hospitality: reservations, visas, guest relations, and a very busy airport floor. I learned what confusion looks like on a person's face in real time, which is a thing you cannot learn from a usability report.</p>
+        <p>Now I design mobile interfaces. I care about the small moments where an app is either calm or cruel: the empty state, the error message, the moment you are late and looking for your gate. I work in Arabic and English, and I design for both directions of the page.</p>
+        <div class="chips">
+          <span class="chip">Mobile UI</span><span class="chip">User flows</span><span class="chip">Wireframing</span>
+          <span class="chip">Prototyping</span><span class="chip">Design systems</span><span class="chip">RTL and LTR layout</span>
+          <span class="chip">Figma</span><span class="chip">Illustrator</span><span class="chip">Photoshop</span><span class="chip">InDesign</span>
+          <span class="chip">Arabic typography</span><span class="chip">Visual identity</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n">2</div><div class="k">Years front line with real users, in travel and hospitality</div></div>
+        <div class="stat"><div class="n">AR / EN</div><div class="k">Bilingual by default, RTL is not an afterthought</div></div>
+        <div class="stat"><div class="n">Dip.</div><div class="k">Graphic Design (Web), TVTC, Al-Madinah</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATH -->
+  <section class="card">
+    <div class="head">
+      <h2>The Route So Far</h2>
+      <span class="note mono">Every stop taught me something about people</span>
+    </div>
+    <div class="path">
+      <div class="stop">
+        <span class="yr">2026</span><span class="dotline"><i></i></span>
+        <div><h4>English Language Program, ILSC Canada</h4><p>Moved to Canada to work in English at full speed, and to design for a second audience without translating my instincts.</p></div>
+      </div>
+      <div class="stop">
+        <span class="yr">2024 to 2025</span><span class="dotline"><i></i></span>
+        <div><h4>Tour Operator, Al Aous International Travel</h4><p>A government supported graduate program. Ran trips end to end: flights, hotels, visas, and the phone calls when something went wrong. This is where my product thinking actually comes from.</p></div>
+      </div>
+      <div class="stop">
+        <span class="yr">2024</span><span class="dotline"><i></i></span>
+        <div><h4>Airport Operations, Prince Mohammad Bin Abdulaziz Intl</h4><p>Guided travelers through the terminal during peak periods. Watched hundreds of people get lost in the same three places, which is a design problem, not a people problem.</p></div>
+      </div>
+      <div class="stop">
+        <span class="yr">2023</span><span class="dotline"><i></i></span>
+        <div><h4>Guest Relations, Hilton</h4><p>Front line service in peak season. Learned the difference between solving a problem and making someone feel taken care of.</p></div>
+      </div>
+      <div class="stop">
+        <span class="yr">2023</span><span class="dotline"><i></i></span>
+        <div><h4>Diploma in Graphic Design (Web)</h4><p>International Technical Female College, Al-Madinah. Type, layout, colour, and the Adobe suite I still open every week.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer class="card contact" id="contact">
+    <h2>Let's build something <em>calm.</em></h2>
+    <p class="ar">لنصمم شيئًا جميلًا</p>
+    <div class="links">
+      <a href="mailto:lama.almarwani.11@gmail.com">lama.almarwani.11@gmail.com</a>
+      <a href="tel:+966543691216">+966 54 369 1216</a>
+      <span style="opacity:.7">Al-Madinah, Saudi Arabia</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+// barcode
+const bc = document.getElementById('barcode');
+for(let i=0;i<34;i++){
+  const b=document.createElement('i');
+  b.style.height = (16 + Math.random()*28)+'px';
+  bc.appendChild(b);
+}
+
+/* =====================================================================
+   صور كل مشروع
+   ---------------------------------------------------------------------
+   srcs  = اسم ملف الغلاف (أول صورة).
+   count = عدد صور المشروع. صورة وحدة = 1.
+
+   التسمية: لو الغلاف bus.png و count:4
+     سمّي الباقي: bus-2.png , bus-3.png , bus-4.png
+     (يجرب أيضاً "bus 2.png" و "bus2.png")
+   حطي الصور في نفس فولدر ملف الـ HTML.
+   ===================================================================== */
+const WORKS = [
+  {cat:"awareness", srcs:['images/stop-ocean-plastic-pollution.png'], count:1,
+   title:"Stop plastic pollution", desc:"An awareness poster about what plastic does to the animals living in it. Cold blues, one word of type, no explaining. The image carries the argument by itself.",
+   year:"2024", tools:"Illustrator", type:"Awareness poster"},
+
+  {cat:"safety", srcs:['images/harassment-awareness-poster.png'], count:1,
+   title:"They are not part of the job", desc:"A workplace campaign poster about harassment. The line is deliberately flat and quiet, because the whole problem is that this gets treated as normal until someone names it.",
+   year:"2024", tools:"Illustrator", type:"Campaign poster"},
+
+  {cat:"safety", srcs:['images/manual-handling-safety-poster.png'], count:1,
+   title:"Putting this up can break your back", desc:"Manual handling safety. The hand is drawn large and slightly off on purpose, so you feel the strain in your own shoulders before you finish reading the line.",
+   year:"2024", tools:"Illustrator", type:"Safety poster"},
+
+  {cat:"safety", srcs:['images/slip-and-trip-safety-poster.png'], count:1,
+   title:"This will fracture you", desc:"A slip and trip poster. One hazard, one consequence, one instruction. Nothing else on the page competing for the two seconds anyone actually gives it.",
+   year:"2024", tools:"Illustrator", type:"Safety poster"},
+
+  {cat:"safety", srcs:['images/road-safety-bus-stop.png'], count:1,   // ← غيّري الرقم لعدد صور المشروع
+   title:"Road and site safety", desc:"An illustrated safety scene built from flat shapes and a warm palette, so it reads as guidance rather than warning. Designed to hold up printed large on a wall.",
+   year:"2025", tools:"Illustrator", type:"Safety illustration"},
+
+  {cat:"safety", srcs:['images/amusement-park-maintenance-poster.png'], count:1,   // ← غيّري الرقم
+   title:"Amusement park maintenance", desc:"A safety piece for ride maintenance crews. Deep purple night, high contrast figures, and a scene readable from across a workshop floor.",
+   year:"2025", tools:"Illustrator", type:"Safety poster"},
+
+  {cat:"illustration", srcs:['images/night-forest-illustration.jpg'], count:1,
+   title:"Night forest", desc:"A personal illustration. Layered trees, one small warm light, everything else in shadow. I made it to practise building depth with almost no colour range.",
+   year:"2023", tools:"Photoshop", type:"Illustration"},
+
+  {cat:"packaging", srcs:['images/future-is-green-packaging.jpg'], count:1,   // ← غيّري الرقم
+   title:"The future is green", desc:"Packaging for a plant based product. Soft cream stock, a hand drawn sprout, and type that stays out of the way. Built to look honest rather than loud.",
+   year:"2024", tools:"Illustrator, InDesign", type:"Packaging"}
+];
+
+/* يبني صفحات المشروع من اسم الغلاف + العدد */
+function buildPages(w){
+  const cover = w.srcs[0];
+  const dot = cover.lastIndexOf('.');
+  const base = cover.slice(0, dot), ext = cover.slice(dot);
+  const n = w.count || 1;
+  const pages = [ w.srcs ];
+  for(let k=2;k<=n;k++){
+    pages.push([ base+'-'+k+ext, base+' '+k+ext, base+k+ext ]);
+  }
+  return pages;
+}
+
+/* try each candidate name until one loads */
+function setSrc(img, list){
+  let i = 0;
+  img.onerror = () => { i++; if(i < list.length) img.src = encodeURI(list[i]); };
+  img.src = encodeURI(list[0]);
+}
+
+const grid = document.getElementById('grid');
+WORKS.forEach((w,i)=>{
+  const b=document.createElement('button');
+  b.className='tile'; b.dataset.cat=w.cat; b.dataset.i=i;
+  b.innerHTML = `
+    <div class="poster"><img alt="${w.title}" loading="lazy"></div>
+    <span class="cap"><b>${w.title}</b><span>${w.year}</span></span>`;
+  setSrc(b.querySelector('img'), w.srcs);
+  b.addEventListener('click',()=>openLb(i));
+  grid.appendChild(b);
+});
+
+document.querySelectorAll('.filt').forEach(f=>{
+  f.addEventListener('click',()=>{
+    const k=f.dataset.f;
+    document.querySelectorAll('.filt').forEach(x=>x.setAttribute('aria-pressed', x===f));
+    document.querySelectorAll('.tile').forEach(t=>{
+      t.classList.toggle('hide', k!=='all' && t.dataset.cat!==k);
+    });
+  });
+});
+
+const lb=document.getElementById('lb');
+let cur=0;
+/* lightbox element refs */
+const pgPrev = document.getElementById('pg-prev');
+const pgNext = document.getElementById('pg-next');
+const pgDots = document.getElementById('pg-dots');
+const btnView = document.getElementById('lb-view');
+
+let pages = [];   // current project's image pages (array of srcs-lists)
+let pg = 0;       // current page index within the project
+let expanded = false; // whether "View project" has been pressed
+
+function renderPage(){
+  const list = pages[pg] || [];
+  const img = document.getElementById('lb-img');
+  img.innerHTML = `<img alt="${WORKS[cur].title}">`;
+  setSrc(img.querySelector('img'), list);
+  pgDots.innerHTML = pages.map((_,n)=>`<i class="${n===pg?'on':''}"></i>`).join('');
+  const multi = expanded && pages.length > 1;
+  pgPrev.hidden = !multi; pgNext.hidden = !multi; pgDots.hidden = !multi;
+}
+
+function setPage(n){ pg = (n + pages.length) % pages.length; renderPage(); }
+
+var openLb = function(i){
+  cur=i; const w=WORKS[i];
+  pages = buildPages(w);
+  pg = 0; expanded = true;   // الأسهم تظهر فوراً
+  renderPage();
+  document.getElementById('lb-tag').textContent = w.type;
+  document.getElementById('lb-title').textContent = w.title;
+  document.getElementById('lb-desc').textContent = w.desc;
+  document.getElementById('lb-year').textContent = w.year;
+  document.getElementById('lb-tools').textContent = w.tools;
+  document.getElementById('lb-type').textContent = w.type;
+  document.getElementById('lb-count').textContent = `${i+1} / ${WORKS.length}`;
+  btnView.hidden = true;   // ما نحتاج الزر، الأسهم ظاهرة من البداية
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+};
+function closeLb(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+
+/* VIEW PROJECT: reveal the full image set and its ‹ / › arrows */
+btnView.addEventListener('click',()=>{ expanded = true; btnView.hidden = true; setPage(0); });
+
+/* ‹ / › page within the current project */
+pgPrev.addEventListener('click',()=>setPage(pg-1));
+pgNext.addEventListener('click',()=>setPage(pg+1));
+
+document.getElementById('lb-x').addEventListener('click',closeLb);
+lb.addEventListener('click',e=>{ if(e.target===lb) closeLb(); });
+
+/* PREV / NEXT move between PROJECTS */
+document.getElementById('lb-prev').addEventListener('click',()=>openLb((cur-1+WORKS.length)%WORKS.length));
+document.getElementById('lb-next').addEventListener('click',()=>openLb((cur+1)%WORKS.length));
+
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open')) return;
+  if(e.key==='Escape'){ closeLb(); return; }
+  const paging = pages.length > 1;
+  if(e.key==='ArrowRight') paging ? setPage(pg+1) : openLb((cur+1)%WORKS.length);
+  if(e.key==='ArrowLeft')  paging ? setPage(pg-1) : openLb((cur-1+WORKS.length)%WORKS.length);
+});
+
+/* ===== SELECTED SCREENS =====================================
+   Add a new UX/UI project by copying one block into this list.
+   srcs = possible file names; the first that loads is used.
+   ============================================================ */
+const SCREENS = [
+  {
+    srcs:['images/fertility-care-app-screens.png'],
+    tag:"Mobile UI · full flow",
+    title:"Mobile app screens",
+    desc:"A full set of mobile screens designed end to end: onboarding, browse, detail, and confirmation. I worked out the flow on paper first, then built every state including the empty and error ones, because those are the screens people actually meet when they are stressed.",
+    role:"UX and UI, end to end",
+    type:"Mobile app, full flow",
+    tools:"Figma, Illustrator",
+    story:{
+      "Problem":"<p>People abandon an app in the first minute when they cannot tell where they are or what happens next. I kept seeing the same thing at the travel desk: someone holding a phone, scrolling, then giving up and asking me instead. The app was not missing features. It was missing a clear path.</p>",
+      "Process":"<ul><li>Mapped the whole flow on paper before opening any design tool, so the structure was settled before the styling started.</li><li>Wrote out every screen a person could land on, including the ones nobody enjoys designing: empty, loading, and error.</li><li>Built a small type and colour system first, then designed against it, so nothing drifted as the screen count grew.</li><li>Tested the flow by handing my phone to someone with no explanation and watching where they paused.</li></ul>",
+      "Solution":"<p>One clear path through the app, with everything optional pushed out of the way until it is asked for. Each screen answers a single question and offers one obvious next step. Consistent spacing and one accent colour mean the eye always knows where the action is, and the states that usually get ignored are designed properly, so the app stays calm when something goes wrong.</p>",
+      "Learned":"<p>The screens that decide whether someone trusts an app are almost never the pretty ones. They are the moments when nothing loaded, or the search came back empty, or the connection dropped. Designing those first changed how I approach every project since.</p>"
+    }
+  }
+  // ,{ srcs:['next-project.png'], tag:"", title:"", desc:"", role:"", type:"", tools:"" }
+];
+
+let scCur = 0;
+const thumbs = document.getElementById('thumbs');
+const stTabs = document.getElementById('storyTabs');
+const stBody = document.getElementById('storyBody');
+
+function buildStory(p){
+  stTabs.innerHTML=''; 
+  const keys = Object.keys(p.story || {});
+  keys.forEach((k,n)=>{
+    const b=document.createElement('button');
+    b.className='st'; b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', n===0);
+    b.textContent = k;
+    b.addEventListener('click',()=>{
+      stTabs.querySelectorAll('.st').forEach(x=>x.setAttribute('aria-selected', x===b));
+      stBody.innerHTML = p.story[k];
+    });
+    stTabs.appendChild(b);
+  });
+  stBody.innerHTML = keys.length ? p.story[keys[0]] : `<p>${p.desc}</p>`;
+}
+
+function showScreen(i){
+  scCur = i;
+  const p = SCREENS[i];
+  setSrc(document.getElementById('sc-img'), p.srcs);
+  document.getElementById('sc-img').alt = p.title;
+  document.getElementById('sc-tag').textContent = p.tag;
+  document.getElementById('sc-title').textContent = p.title;
+  buildStory(p);
+  document.getElementById('sc-role').textContent = p.role;
+  document.getElementById('sc-type').textContent = p.type;
+  document.getElementById('sc-tools').textContent = p.tools;
+  thumbs.querySelectorAll('.thumb').forEach((t,n)=>t.setAttribute('aria-selected', n===i));
+}
+
+SCREENS.forEach((p,i)=>{
+  const t=document.createElement('button');
+  t.className='thumb'; t.setAttribute('role','tab');
+  t.setAttribute('aria-selected', i===0);
+  t.setAttribute('aria-label', p.title);
+  t.innerHTML='<img alt="">';
+  setSrc(t.querySelector('img'), p.srcs);
+  t.addEventListener('click',()=>showScreen(i));
+  thumbs.appendChild(t);
+});
+if(SCREENS.length < 2){
+  const a=document.createElement('span');
+  a.className='thumb-add'; a.textContent='More soon';
+  thumbs.appendChild(a);
+}
+showScreen(0);
+
+const projLbl = document.querySelector('.lb-projlbl');
+
+document.getElementById('screensShot').addEventListener('click',()=>{
+  const p = SCREENS[scCur];
+  // a screens project can carry several images via `pages`; else its single cover
+  pages = buildPages(p);
+  pg = 0; expanded = true;   // الأسهم تظهر فوراً
+  renderPage();
+  document.getElementById('lb-tag').textContent = p.tag;
+  document.getElementById('lb-title').textContent = p.title;
+  document.getElementById('lb-desc').textContent = p.desc;
+  document.getElementById('lb-year').textContent = p.type;
+  document.getElementById('lb-tools').textContent = p.tools;
+  document.getElementById('lb-type').textContent = p.role;
+  document.getElementById('lb-count').textContent = SCREENS.length>1 ? `${scCur+1} / ${SCREENS.length}` : '';
+  // View project appears when this screen set has more than one image
+  btnView.hidden = true;   // ما نحتاج الزر، الأسهم ظاهرة من البداية
+  // Prev/Next step between screen projects
+  document.getElementById('lb-prev').style.display = SCREENS.length>1 ? '' : 'none';
+  document.getElementById('lb-next').style.display = SCREENS.length>1 ? '' : 'none';
+  document.querySelector('.lb-projnav').style.display = SCREENS.length>1 ? '' : 'none';
+  projLbl.textContent = 'Projects';
+  lbMode = 'screens';
+  lb.classList.add('open'); document.body.style.overflow='hidden';
+});
+
+let lbMode = 'gallery';
+const _open = openLb;
+openLb = function(i){
+  lbMode='gallery';
+  document.querySelector('.lb-projnav').style.display='';
+  projLbl.textContent = 'Projects';
+  document.getElementById('lb-prev').style.display='';
+  document.getElementById('lb-next').style.display='';
+  _open(i);
+};
+
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+document.querySelectorAll('.card').forEach(c=>io.observe(c));
+</script>
+</body>
+</html>
