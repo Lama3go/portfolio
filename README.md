@@ -14,7 +14,7 @@ Built with plain HTML, CSS and JavaScript. No framework and no build step. Hoste
 ## Project structure
 
 ```
-work-main/
+portfolio/
   index.html      the whole site (HTML, CSS and JS in one file)
   README.md       this file
   images/         every project image
