@@ -1,0 +1,73 @@
+# Lama Almarwani | UX/UI Designer Portfolio
+
+A single page portfolio site for Lama Almarwani, a UX/UI designer based between Al-Madinah and Vancouver. It shows mobile app screens, book and editorial designs, safety and awareness posters, illustration and packaging work, plus her background and contact details.
+
+Built with plain HTML, CSS and JavaScript. No framework and no build step. Hosted on GitHub Pages.
+
+## What is on the site
+
+- **Selected Screens:** a case study for a fertility care mobile app (Problem, Process, Solution, Learned tabs).
+- **Books and Editorial:** a carousel of book covers and editorial spreads. Pill tabs on top, a large centre card with the next and previous cards peeking at the sides, a plus button that opens the full size viewer, and a pill navigation bar at the bottom. It works with swipe, mouse drag, the arrow buttons and the keyboard arrow keys.
+- **The Rest Of The Work:** a filterable poster wall (Awareness, Safety campaigns, Illustration, Packaging) with a full size viewer.
+- **About and Route:** her story, skills and career path.
+- **Contact:** email, phone and location.
+
+## Project structure
+
+```
+portfolio/
+  index.html      the whole site (HTML, CSS and JS in one file)
+  README.md       this file
+  images/         every project image
+```
+
+## Projects and their images
+
+| Project | Category | Image file |
+|---|---|---|
+| Mobile app screens (fertility care app) | UX / UI | `fertility-care-app-screens.png` |
+| Stop plastic pollution | Awareness | `stop-ocean-plastic-pollution.png` |
+| They are not part of the job | Safety campaign | `harassment-awareness-poster.png` |
+| Putting this up can break your back | Safety campaign | `manual-handling-safety-poster.png` |
+| This will fracture you | Safety campaign | `slip-and-trip-safety-poster.png` |
+| Road and site safety | Safety campaign | `road-safety-bus-stop.png` |
+| Amusement park maintenance | Safety campaign | `amusement-park-maintenance-poster.png` |
+| Night forest | Illustration | `night-forest-illustration.jpg` |
+| The future is green | Packaging | `future-is-green-packaging.jpg` |
+| Strait Street: When Valletta Was a Port That Never Slept | Book / editorial | `page1.jpg` |
+| Gorilla Populations in the Wild | Book / editorial | `page2.jpg` |
+| The Theft of Antiquities in Iraq | Book / editorial | `page3.jpg` |
+| Hidden Heritage (book cover) | Book / editorial | `page4.jpg` |
+| Traditional Wooden Window Screens in Hijazi Architecture | Book / editorial | `page5.jpg` |
+
+## How to add or change a project
+
+1. Put the image inside the `images/` folder. Use lowercase words separated by dashes, for example `my-new-poster.png`.
+2. Open `index.html` and search for `const WORKS`.
+3. Copy one block and change `srcs`, `title`, `desc`, `year`, `tools` and `type`. The path must start with `images/` and match the file name exactly, including letter case.
+4. If a project has more than one image, name the extra ones with `-2`, `-3`, `-4` after the cover name (`my-new-poster-2.png`) and set `count` to the total number of images.
+
+## How to add or change a book in the carousel
+
+1. Put the image inside the `images/` folder, for example `my-new-book.jpg`.
+2. Open `index.html` and search for `const BOOKS`.
+3. Copy one block and change `tab` (the short name on the pill tab), `srcs`, `title`, `desc`, `year`, `tools` and `type`.
+4. Save. The tabs, the number buttons and the counter update by themselves.
+
+To rename the five current images (`page1.jpg` to `page5.jpg`) to something meaningful, rename the file in `images/` and change the same name in its `srcs` line inside `BOOKS`.
+
+## Image size tip
+
+The book pages are large (2 to 4 MB each). Big files make the site slow to open on a phone. Before uploading, shrink each one to about 2000 px wide and save it as a JPG at 80 to 85 percent quality. Squoosh (squoosh.app) does this for free in the browser and keeps the quality. Keep the same file names.
+
+## Publishing on GitHub Pages
+
+1. Save the files, then open Source Control in VS Code.
+2. Write a short message, press **Commit**, then **Sync Changes**.
+3. Wait a minute or two, open the site and hard refresh with `Ctrl+F5`.
+
+`index.html` must stay in the root of the repository for GitHub Pages to find it.
+
+## Contact
+
+lama.almarwani.11@gmail.com
